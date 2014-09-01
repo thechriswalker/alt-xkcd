@@ -1,0 +1,11 @@
+{
+   "browser_action": {
+      "default_icon": "xkcd1.png",
+      "popup": "xkcd.html"
+   },
+   "description": "Simple xkcd viewer with alt text dislpayed.",
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDzv/hBmoVXusgGetR9Sw0/rOj8LfXlhnGQ8LlKVneLl0QGJyKVEaenhmv/N8zyECLsAgcSmVkuS3Cz2NUEnp9KjnGt/jdjyzTV6MLtfqIr/x0SZ++X0o92q0kQn/hMhzqDXYM7U80WPiCTFs6c7N45piX2BrXPzalrpOtANLc54QIDAQAB",
+   "name": "alt-xkcd",
+   "permissions": [ "http://xkcd.com/" ],
+   "version": "1.2"
+}

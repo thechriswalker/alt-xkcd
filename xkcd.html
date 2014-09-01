@@ -1,0 +1,137 @@
+<meta charset="utf8">
+<script>
+/*
+    xkcd chrome extension...
+    http://xkcd.com/info.0.json or http://xkcd.com/#number#/info.0.json
+{
+    "img": "http://imgs.xkcd.com/comics/alternative_literature.png",
+    "title": "Alternative Literature",
+    "month": "10",
+    "num": 971,
+    "link": "",
+    "year": "2011",
+    "news": "",
+    "safe_title": "Alternative Literature",
+    "transcript": "",
+    "alt": "I just noticed CVS has started stocking homeopathic pills on the same shelves with--and labeled similarly to--their actual medicine. Telling someone who trusts you that you're giving them medicine, when you know you\u00e2\u0080\u0099re not, because you want their money, isn\u00e2\u0080\u0099t just lying--it\u00e2\u0080\u0099s like an example you\u00e2\u0080\u0099d make up if you had to illustrate for a child why lying is wrong.",
+    "day": "31"
+}
+*/
+//simple xhr request to load comic
+function getComic(num, callback){
+    if(num === null){
+        num = "";
+    }else{
+        num = num+"/";
+    }
+    var url = "http://xkcd.com/"+num+"info.0.json";
+    var req = new XMLHttpRequest();
+    req.open("GET", url, true);
+    req.onload = function(){
+        json = JSON.parse(req.responseText);
+        if(!json){
+            callback("Comic not found...");
+        }else{
+            callback(null, json);
+        }
+    }
+    req.send(null);
+}
+function show(err, json){
+    if(err){
+        document.querySelector('header').innerText = err;
+    }else{
+        number = json.num;
+        document.querySelector('header').innerText = "#"+number+": "+json.title;
+        document.querySelector('#xkcd').src = json.img;
+        document.querySelector('#alt').innerText = json.alt;
+        document.querySelector('#link').href = "http://xkcd.com/"+json.num;
+    }
+}
+
+var number = null;
+function latest(){
+    getComic(null, show);
+}
+function next(){
+    getComic(number+1, show);
+}
+function by_number(){
+    var num = prompt("Which comic?");
+    getComic(num, show);
+}
+function prev(){
+    getComic(number-1, show);
+}
+function visit_xkcd(){
+    window.open('http://xkcd.com');
+}
+
+</script>
+<style>
+body {
+    width:800px;
+    min-height:600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+header {
+    font-size:1.4em;
+    font-weight:bold;
+    padding:2px 5px;
+    border-bottom:1px solid #ddd;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+}
+#alt {
+    font-size:1.2em;
+    width:720px;
+    margin:5px auto;
+}
+#main {
+    text-align:center;
+    padding-right:20px;
+}
+footer {
+    border-top:1px solid #ddd;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+
+}
+.fade {
+    background:rgba(0,0,0,0.7);
+    color:#fff;
+}
+section {
+    padding:40px 0px 60px;
+}
+footer span {
+    display:inline-block;
+    cursor:pointer;
+    margin:0 20px;
+    padding:5px;
+    width:150px;
+}
+footer span:hover {
+    background:rgba(0,0,0,0.2);
+}
+</style>
+<div id="main">
+    <header class="fade">loading...</header>
+    <section>
+        <p><a id="link" target="_blank" href="#"><img id="xkcd" alt="loading" /></a></p>
+        <p id="alt"></p>
+    </section>
+    <footer class="fade">
+        <span onclick="prev();">previous</span>
+        <span onclick="latest();">latest</span>
+        <span onclick="next();">next</span>
+        <span onclick="by_number();">by number</span>
+        <span onclick="visit_xkcd();">visit XKCD</span>
+    </footer>
+</div>
+<script>latest();</script>
